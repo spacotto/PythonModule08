@@ -54,10 +54,36 @@ def color(code: int, text: str) -> str:
 def outside_venv() -> None:
     """..."""
     print()
-    print(color(3, " MATRIX STATUS: You're still plugged in"))
+    print(color(3, ' MATRIX STATUS: You are still plugged in'))
 
     print()
+    print(f' Current Python: {sys.executable}.')
+    print(' Virtual Environment: None detected')
 
+    print()
+    print(color(3, ' WARNING! You are in the global environment!'))
+    print(' The machines can see everything you install.')
+
+    print()
+    print(color(6, ' Follow these steps to enter the construct:'))
+
+    print()
+    print(color(7, f'{" Step 1":<10}Run the following command'))
+    print(f'{" ":<10}python -m venv matrix_env')
+
+    print()
+    print(color(7, f'{" Step 2":<10}Check your OS'))
+
+    print()
+    print(color(7, f'{" ":<10}If you are on Unix, run:'))
+    print(f'{" ":<10}source matrix_env/bin/activate')
+
+    print()
+    print(color(7, f'{" ":<10}If you are on Windows, run:'))
+    print(f'{" ":<10}matrix_env\\Scripts\\activate')
+
+    print()
+    print(color(7, f'{" Step 3":<10}Run this program again'))
     print()
 
 
@@ -72,7 +98,9 @@ def inside_venv() -> None:
 
 
 def detect_venv() -> None:
-    """Detect in which env the program is running"""
+    """
+    Detect in which env the program is running and display info accordingly.
+    """
     if sys.prefix == sys.base_prefix:
         outside_venv()
     else:
