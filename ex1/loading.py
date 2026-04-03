@@ -57,6 +57,7 @@ def check_dependencies() -> bool:
 
     all_ready = True
 
+    print()
     print(color(3, " LOADING STATUS: Loading programs...\n"))
     print(color(3, " Checking dependencies:"))
 
@@ -84,14 +85,15 @@ def check_dependencies() -> bool:
 #  --- requests   Handling HTTP protocols for external data
 # ----------------------------------------------------------------------------
 
-def sample_analysis() -> np.ndarray:
+def sample_analysis(data_points: int) -> np.ndarray:
     """Standard NumPy simulation (Default)."""
+    print()
     print(color(3, " Analyzing Matrix data..."))
-    print(color(3, " Processing 1000 data points..."))
-    return np.random.standard_normal(1000)
+    print(color(3, f" Processing {data_points} data points..."))
+    return np.random.standard_normal(data_points)
 
 
-def api_analysis(url: str) -> np.ndarray:
+def api_analysis(data_points: int, url: str) -> np.ndarray:
     """
     REQUESTS METHOD: External Mainframe Access.
     Fetches real-time temperature data from Le Havre.
@@ -99,7 +101,10 @@ def api_analysis(url: str) -> np.ndarray:
     is used to structure the resulting data for analysis.
     """
 
-    print(color(3, " Accessing Mainframe: Le Havre Meteo..."))
+    print()
+    print(color(3, " Analyzing Matrix data..."))
+    print(color(3, f" Processing {data_points} data points..."))
+
     try:
         response = requests.get(url, timeout=5)
         response.raise_for_status()
@@ -109,15 +114,15 @@ def api_analysis(url: str) -> np.ndarray:
 
         # Convert to NumPy array
         data = np.array(raw_data)
-        if len(data) < 1000:
-            data = np.tile(data, (1000 // len(data) + 1))[:1000]
+        if len(data) < data_points:
+            data = np.tile(data, (data_points // len(data) + 1))[:data_points]
 
         return data
 
     except Exception as e:
         print(color(5, f" CONNECTION ERROR: {e}"))
         print(color(3, " Falling back to NumPy simulation..."))
-        return sample_analysis()
+        return sample_analysis(data_points)
 
 
 # ----------------------------------------------------------------------------
@@ -126,6 +131,9 @@ def api_analysis(url: str) -> np.ndarray:
 
 def create_visualization(data: np.ndarray) -> None:
     """Use pandas for analysis and matplotlib for output."""
+
+    print(color(3, " Generating visualization..."))
+
     try:
         df = pd.DataFrame(data, columns=['Temperature'])
         df['Trend'] = df['Temperature'].rolling(window=24).mean()
@@ -139,13 +147,13 @@ def create_visualization(data: np.ndarray) -> None:
 
         file_name = 'matrix_analysis.png'
         plt.savefig(file_name)
-        print(color(2, f" Results saved to: {file_name}"))
+        print(color(6, f" Results saved to: {file_name}"))
 
-        print(color(6, " Opening visualization window..."))
+        print(color(3, " Opening visualization window..."))
         plt.show()
 
     except Exception as e:
-        print(color(1, f" ERROR: Visualization failure: {e}"))
+        print(color(5, f" ERROR: Visualization failure: {e}"))
 
 
 # ----------------------------------------------------------------------------
@@ -154,21 +162,17 @@ def create_visualization(data: np.ndarray) -> None:
 
 def loading() -> None:
     """Demo"""
-    print()
+    data_points: int = 1000
 
     try:
         if check_dependencies():
 
-            print()
-            data = api_analysis('https://api.ope-meteo.com/v1/forecast?'
+            data = api_analysis(data_points,
+                                'https://api.open-meteo.com/v1/forecast?'
                                 'latitude=49.4938&longitude=0.1077&hourly'
                                 '=temperature_2m')
 
-            print()
             create_visualization(data)
-
-        else:
-            print()
 
     except Exception as e:
         print(color(1, f' ERROR! {e}'))
