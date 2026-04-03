@@ -1,5 +1,8 @@
-# pip packages config file
+# Install:
 # pip install -r requirements.txt
+
+# Run:
+# python3 loading.p
 
 pandas>=2.1.0
 numpy>=1.25.0

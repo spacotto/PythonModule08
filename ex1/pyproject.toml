@@ -1,3 +1,15 @@
+# If no poetry:
+# curl -sSL https://install.python-poetry.org | python3 -
+
+# If system can't find poetry:
+# vim ~/.zshrc
+# export PATH="$HOME/.local/bin:$PATH"
+# source ~/.zshrc
+# poetry --version
+
+# poetry install
+# poetry run python loading.py
+
 [tool.poetry]
 name = "loading"
 version = "0.1.0"
