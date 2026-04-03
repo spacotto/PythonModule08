@@ -16,7 +16,7 @@ from typing import Tuple
 
 
 # ----------------------------------------------------------------------------
-#
+#  Toolkit to detect Python environment and act accodingly
 # ----------------------------------------------------------------------------
 
 class EnvironmentDetector:
@@ -55,14 +55,15 @@ class EnvironmentDetector:
     #  Behaviour outside venv
     # ----------------------------------------------------------------------------
 
-    def _report_outside(self) -> None:
+    def _outside_venv(self) -> None:
         """Displays status when run in the global environment."""
+        venv_name: str = 'matrix_env'
 
         print()
         print(self._color(3, ' MATRIX STATUS: You are still plugged in'))
 
         print()
-        print(f' Current Python: {sys.executable}.')
+        print(f' Current Python: {sys.executable}')
         print(' Virtual Environment: None detected')
 
         print()
@@ -70,22 +71,19 @@ class EnvironmentDetector:
         print(' The machines can see everything you install.')
 
         print()
-        print(self._color(6, ' Follow these steps to enter the construct:'))
+        print(self._color(3, ' Follow these steps to enter the construct:'))
 
         print()
-        print(self._color(7, f'{" Step 1":<10}Run the following command'))
-        print(f'{" ":<10}python -m venv matrix_env')
+        print(self._color(7, f'{" Step 1":<10}To create the venv, run:'))
+        print(f'{" ":<10}python3 -m venv {venv_name}')
 
         print()
-        print(self._color(7, f'{" Step 2":<10}Check your OS'))
-
-        print()
-        print(self._color(7, f'{" ":<10}If you are on Unix, run:'))
-        print(f'{" ":<10}source matrix_env/bin/activate')
+        print(self._color(7, f'{" Step 2":<10}If you are on Unix, run:'))
+        print(f'{" ":<10}source {venv_name}/bin/activate')
 
         print()
         print(self._color(7, f'{" ":<10}If you are on Windows, run:'))
-        print(f'{" ":<10}matrix_env\\Scripts\\activate')
+        print(f'{" ":<10}{venv_name}\\Scripts\\activate')
 
         print()
         print(self._color(7, f'{" Step 3":<10}Run this program again'))
@@ -112,7 +110,7 @@ class EnvironmentDetector:
         except Exception:
             return "Unknown"
 
-    def _report_inside(self) -> None:
+    def _inside_venv(self) -> None:
         """Displays status when run in a virtual environment."""
         name, path = self._get_env_info()
         pkg_path = self._get_package_path()
@@ -121,12 +119,12 @@ class EnvironmentDetector:
         print(self._color(6, " MATRIX STATUS: Welcome to the construct"))
 
         print()
-        print(f' {self._color(7, "Current Python:")} {sys.executable}.')
+        print(f' {self._color(7, "Current Python:")} {sys.executable}')
         print(f' {self._color(7, "Virtual Environment:")} {name}')
         print(f' {self._color(7, "Environment Path:")} {path}')
 
         print()
-        print(self._color(6, 'SUCCESS!') +
+        print(self._color(6, ' SUCCESS!') +
               ' You are in an isolated environment!')
         print(' Safe to install packages without affecting\n'
               ' the global system.')
@@ -134,18 +132,22 @@ class EnvironmentDetector:
         print()
         print(self._color(7, ' Package installation path:'))
         print(f' {pkg_path}')
+
+        print()
+        print(self._color(7, ' Run "deactivate" to return to the global'
+                             ' environment.'))
         print()
 
     # ----------------------------------------------------------------------------
-    #
+    #  Display information about the current Python environment
     # ----------------------------------------------------------------------------
 
     def detect_env(self) -> None:
         """Detect the environment and provide the appropriate report."""
         if sys.prefix == sys.base_prefix:
-            self._report_outside()
+            self._outside_venv()
         else:
-            self._report_inside()
+            self._inside_venv()
 
 
 # ----------------------------------------------------------------------------
