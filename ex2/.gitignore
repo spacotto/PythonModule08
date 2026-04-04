@@ -1,1 +1,19 @@
+# Your .env file should be in .gitignore.
+.env
 
+# Do NOT share venv
+*_env/
+venv/
+.venv/
+
+# Python Artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Data Science & Analysis Visuals
+*.png
+
+# System Files
+.DS_Store
