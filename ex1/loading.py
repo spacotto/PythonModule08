@@ -6,18 +6,15 @@ Objective: Demonstrate understanding of package management
 
 
 # ----------------------------------------------------------------------------
-#  Imports
+#  Imports (lib to be installed are inside the functions)
 # ----------------------------------------------------------------------------
 
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import requests
-import importlib
+import sys
+from importlib import import_module, metadata
 
 
 # ----------------------------------------------------------------------------
-#  Visual helper for colors
+#  Visual helpers
 # ----------------------------------------------------------------------------
 
 def color(code: int, text: str) -> str:
@@ -41,6 +38,40 @@ def color(code: int, text: str) -> str:
     return f'{color}{text}{colors[0]}'
 
 
+def div(to_write: str, how_many_times: int) -> None:
+    """Prints a line divider."""
+    print(" " + to_write * how_many_times)
+
+
+# ----------------------------------------------------------------------------
+#  Provide instructions to install missing dependencies
+# ----------------------------------------------------------------------------
+
+def instructions() -> str:
+    """How to install missing dependencies with pip or Poetry"""
+    print()
+    print(color(5, ' ERROR! Some dependencies apper to be missing!'))
+    print(color(7, ' Choose a package manager to install them.'))
+    print()
+
+    x = input(color(7, f' {'OPTION 1':<10}'
+                       ' Would you like to use pip (y/n)? '))
+    if x == 'y':
+        print(f' {'':<10} python -m venv matrix_env')
+        print(f' {'':<10} source matrix_env/bin/activate')
+        print(f' {'':<10} pip install -r requirements.txt')
+        print(f' {'':<10} python3 loading.py')
+    else:
+        y = input(color(7,  f' {'OPTION 2':<10}'
+                            ' Would you like to use Poetry (y/n)? '))
+        if y == 'y':
+            print(f' {'':<10} poetry install')
+            print(f' {'':<10} poetry run python loading.py')
+        else:
+            print(f' {'':<10} Then enjoy your missing dependencies!')
+            print(f' {'':<10} Good luck working without them :)')
+
+
 # ----------------------------------------------------------------------------
 #  Check dependencies status
 # ----------------------------------------------------------------------------
@@ -57,24 +88,20 @@ def check_dependencies() -> bool:
 
     all_ready = True
 
-    print()
-    print(color(3, " LOADING STATUS: Loading programs...\n"))
-    print(color(3, " Checking dependencies:"))
+    print(color(3, "\n LOADING STATUS: Loading programs..."))
+    print(color(3, "\n Checking dependencies:"))
 
     for lib, message in requirements.items():
         try:
-            importlib.import_module(lib)
-            version = importlib.metadata.version(lib)
+            import_module(lib)
+            version = metadata.version(lib)
             print(f" {color(6, '[OK]')} {lib} ({version}) - {message}")
-        except (ImportError, importlib.metadata.PackageNotFoundError):
+        except (ImportError, metadata.PackageNotFoundError):
             print(f" {color(5, '[ERROR]')} {lib} is missing.")
             all_ready = False
 
     if not all_ready:
-        print()
-        print(color(7, ' Run one of these two commands:'))
-        print(' pip install -r requirements.txt')
-        print(' poetry install')
+        instructions()
 
     return all_ready
 
@@ -85,14 +112,6 @@ def check_dependencies() -> bool:
 #  --- requests   Handling HTTP protocols for external data
 # ----------------------------------------------------------------------------
 
-def sample_analysis(data_points: int) -> np.ndarray:
-    """Standard NumPy simulation (Default)."""
-    print()
-    print(color(3, " Analyzing Matrix data..."))
-    print(color(3, f" Processing {data_points} data points..."))
-    return np.random.standard_normal(data_points)
-
-
 def api_analysis(data_points: int, url: str) -> np.ndarray:
     """
     REQUESTS METHOD: External Mainframe Access.
@@ -100,6 +119,10 @@ def api_analysis(data_points: int, url: str) -> np.ndarray:
     'Requests' handles the HTTP handshake, while 'NumPy'
     is used to structure the resulting data for analysis.
     """
+
+    # --- Later imports to avoid errors when lib are not installed
+    import numpy as np
+    import requests
 
     print()
     print(color(3, " Analyzing Matrix data..."))
@@ -125,12 +148,24 @@ def api_analysis(data_points: int, url: str) -> np.ndarray:
         return sample_analysis(data_points)
 
 
+def sample_analysis(data_points: int) -> np.ndarray:
+    """Standard NumPy simulation (Default)."""
+    print()
+    print(color(3, " Analyzing Matrix data..."))
+    print(color(3, f" Processing {data_points} data points..."))
+    return np.random.standard_normal(data_points)
+
+
 # ----------------------------------------------------------------------------
 #  Visualization Logic
 # ----------------------------------------------------------------------------
 
 def create_visualization(data: np.ndarray) -> None:
     """Use pandas for analysis and matplotlib for output."""
+
+    # --- Later imports to avoid errors when lib are not installed
+    import pandas as pd
+    import matplotlib.pyplot as plt
 
     print(color(3, " Generating visualization..."))
 
@@ -147,6 +182,8 @@ def create_visualization(data: np.ndarray) -> None:
 
         file_name = 'matrix_analysis.png'
         plt.savefig(file_name)
+        print()
+        print(color(6, " Analysis complete!"))
         print(color(6, f" Results saved to: {file_name}"))
 
         print(color(3, " Opening visualization window..."))
@@ -161,17 +198,20 @@ def create_visualization(data: np.ndarray) -> None:
 # ----------------------------------------------------------------------------
 
 def loading() -> None:
-    """Demo"""
+    """Main execution flow for Matrix data analysis."""
     data_points: int = 1000
 
     try:
+        # Check dependencies status
         if check_dependencies():
 
+            # Fetch data from the Mainframe or fallback to Simulation
             data = api_analysis(data_points,
                                 'https://api.open-meteo.com/v1/forecast?'
                                 'latitude=49.4938&longitude=0.1077&hourly'
                                 '=temperature_2m')
 
+            # Generate the visual output
             create_visualization(data)
 
     except Exception as e:
@@ -181,4 +221,10 @@ def loading() -> None:
 
 
 if __name__ == "__main__":
-    loading()
+    try:
+        loading()
+    except KeyboardInterrupt:
+        print()
+        print(f"{color(5, ' ERROR! Keyboard interruption detected')}")
+        print()
+        sys.exit(0)
