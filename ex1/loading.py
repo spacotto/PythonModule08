@@ -187,8 +187,7 @@ def create_visualization(data: np.ndarray) -> None:
         print(color(6, f" Results saved to: {file_name}"))
 
         print(color(3, " Opening visualization window..."))
-        plt.show(
-                )
+        plt.show()
 
     except Exception as e:
         print(color(5, f" ERROR: Visualization failure: {e}"))
