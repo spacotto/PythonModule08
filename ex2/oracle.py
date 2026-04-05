@@ -60,19 +60,38 @@ def help_missing_env() -> None:
 
 def parse_config() -> dict[str, str | None]:
     """Try to get the values from the config."""
-    required_vars: list[str] = [
-        "MATRIX_MODE",
-        "DATABASE_URL",
-        "API_KEY",
-        "LOG_LEVEL",
-        "ZION_ENDPOINT"
-    ]
+    config: dict[str, str | None] = {}
+
+    required_vars: list = [
+        'MATRIX_MODE',
+        'DATABASE_URL',
+        'API_KEY',
+        'LOG_LEVEL',
+        'ZION_ENDPOINT',
+        ]
+
+    expected_mode = ['development', 'production']
+    expected_log_level = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
 
     load_dotenv()
 
-    config: dict[str, str | None] = {}
     for var in required_vars:
-        config[var] = os.getenv(var)
+
+        try:
+            x = os.getenv(var)
+        except:
+            x = None
+
+        if x == 'your_variable_here':
+            config[var] = 'default'
+        elif not x:
+            config[var] = None
+        elif var == 'MATRIX_MODE' and x not in expected_mode:
+            config[var] = None
+        elif var == 'LOG_LEVEL' and x not in expected_log_level:
+            config[var] = None
+        else:
+            config[var] = os.getenv(var)
 
     return config
 
@@ -93,7 +112,11 @@ def config_report(config: dict[str, str | None]) -> None:
 
     for k, v in config.items():
         if v is None:
-            print(color(3, ' [WARNING]') + f' {k} is not configured!')
+            print(f' {color(7, report[k][0]):<25}{color(3, '[WARNING]')}'
+                  f' {k} is not configured!')
+        elif v == 'default':
+            print(f' {color(7, report[k][0]):<25}{color(3, '[WARNING]')}'
+                  f' {k} is a default value!')
         else:
             print(f' {color(7, report[k][0]):<25}{report[k][1]}')
 
