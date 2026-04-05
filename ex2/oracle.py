@@ -73,13 +73,12 @@ def parse_config() -> dict[str, str | None]:
     expected_mode = ['development', 'production']
     expected_log_level = ['DEBUG', 'INFO', 'WARNING', 'ERROR']
 
-    load_dotenv()
-
     for var in required_vars:
 
         try:
+            load_dotenv()
             x = os.getenv(var)
-        except:
+        except Exception:
             x = None
 
         if x == 'your_variable_here':
@@ -96,13 +95,14 @@ def parse_config() -> dict[str, str | None]:
     return config
 
 
-def config_report(config: dict[str, str | None]) -> None:
+def config_report(config: dict[str, str | None]) -> bool:
     """Displays the formatted configuration report"""
 
     print()
     print(color(3, ' Configuration loaded...'))
 
-    report: dict = {
+    report: bool = True
+    report_map: dict = {
         'MATRIX_MODE': ['Mode', config['MATRIX_MODE']],
         'DATABASE_URL': ['Database', 'Connected to local instance'],
         'API_KEY': ['API Access', 'Authenticated'],
@@ -112,20 +112,46 @@ def config_report(config: dict[str, str | None]) -> None:
 
     for k, v in config.items():
         if v is None:
-            print(f' {color(7, report[k][0]):<25}{color(3, '[WARNING]')}'
+            print(f' {color(7, report_map[k][0]):<25}{color(3, '[WARNING]')}'
                   f' {k} is not configured!')
+            report = False
         elif v == 'default':
-            print(f' {color(7, report[k][0]):<25}{color(3, '[WARNING]')}'
+            print(f' {color(7, report_map[k][0]):<25}{color(3, '[WARNING]')}'
                   f' {k} is a default value!')
+            report = False
         else:
-            print(f' {color(7, report[k][0]):<25}{report[k][1]}')
+            print(f' {color(7, report_map[k][0]):<25}{report_map[k][1]}')
 
-def security_check() -> None:
+    return report
+
+
+def check_git_security() -> bool:
+    """Scan .gitignore to ensure .env is properly masked."""
+    try:
+        if os.path.exists(".gitignore"):
+            with open(".gitignore", "r") as f:
+                content = f.read()
+                return ".env" in content
+        return False
+    except Exception:
+        return False
+
+
+def security_check(config_report: bool) -> None:
     """Check the env is secure"""
     print()
     print(color(3, ' Environment security check...'))
-    print(f" {color(6, '[OK]')} No hardcoded secrets detected")
-    print(f" {color(6, '[OK]')} .env file properly configured")
+
+    if os.path.exists(".env.example") and check_git_security():
+        print(f" {color(6, '[OK]')} No hardcoded secrets detected")
+    else:
+        print(f" {color(5, '[KO]')} Secrets might be exposed")
+
+    if config_report:
+        print(f" {color(6, '[OK]')} .env file properly configured")
+    else:
+        print(f" {color(5, '[KO]')} .env file NOT properly configured")
+
     print(f" {color(6, '[OK]')} Production overrides available")
 
 
@@ -145,8 +171,8 @@ def oracle() -> None:
             return
 
         config = parse_config()
-        config_report(config)
-        security_check()
+        report = config_report(config)
+        security_check(report)
 
         print()
         print(color(7, ' The Oracle sees all configurations.'))
