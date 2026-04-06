@@ -54,8 +54,8 @@ def help_missing_env() -> None:
     print()
     print(color(5, ' ERROR! The environment configuration is missing!'))
     print(color(7, ' To fix this, follow these steps:'))
-    print(f' {color(7, 'STEP 1'):<20}cp .env.example .env')
-    print(f' {color(7, 'STEP 2'):<20}Edit .env with your values')
+    print(f' {color(7, "STEP 1"):<20}cp .env.example .env')
+    print(f' {color(7, "STEP 2"):<20}Edit .env with your values')
 
 
 def parse_config() -> dict[str, str | None]:
@@ -112,11 +112,11 @@ def config_report(config: dict[str, str | None]) -> bool:
 
     for k, v in config.items():
         if v is None:
-            print(f' {color(7, report_map[k][0]):<25}{color(3, '[WARNING]')}'
+            print(f' {color(7, report_map[k][0]):<25}{color(3, "[WARNING]")}'
                   f' {k} is not configured!')
             report = False
         elif v == 'default':
-            print(f' {color(7, report_map[k][0]):<25}{color(3, '[WARNING]')}'
+            print(f' {color(7, report_map[k][0]):<25}{color(3, "[WARNING]")}'
                   f' {k} is a default value!')
             report = False
         else:
