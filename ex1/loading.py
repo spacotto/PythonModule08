@@ -146,7 +146,6 @@ def api_analysis(data_points: int, url: str) -> 'np.ndarray':
 def sample_analysis(data_points: int) -> 'np.ndarray':
     """Standard NumPy simulation (Default)."""
     # --- Later imports to avoid errors when lib are not installed
-    import requests
     import numpy as np
 
     print()
@@ -207,7 +206,7 @@ def loading() -> None:
             # Fetch data from the Mainframe or fallback to Simulation
             data = api_analysis(data_points,
                                 'https://api.open-meteo.com/v1/forecast?'
-                                'latitud=49.4938&longitude=0.1077&hourly'
+                                'latitude=49.4938&longitude=0.1077&hourly'
                                 '=temperature_2m')
 
             # Generate the visual output
