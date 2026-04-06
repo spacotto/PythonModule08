@@ -47,29 +47,29 @@ def div(to_write: str, how_many_times: int) -> None:
 #  Provide instructions to install missing dependencies
 # ----------------------------------------------------------------------------
 
-def instructions() -> str:
+def instructions() -> None:
     """How to install missing dependencies with pip or Poetry"""
     print()
     print(color(5, ' ERROR! Some dependencies apper to be missing!'))
     print(color(7, ' Choose a package manager to install them.'))
     print()
 
-    x = input(color(7, f' {'OPTION 1':<10}'
+    x = input(color(7, f' {"OPTION 1":<10}'
                        ' Would you like to use pip (y/n)? '))
     if x == 'y':
-        print(f' {'':<10} python -m venv matrix_env')
-        print(f' {'':<10} source matrix_env/bin/activate')
-        print(f' {'':<10} pip install -r requirements.txt')
-        print(f' {'':<10} python3 loading.py')
+        print(f' {"":<10} python -m venv matrix_env')
+        print(f' {"":<10} source matrix_env/bin/activate')
+        print(f' {"":<10} pip install -r requirements.txt')
+        print(f' {"":<10} python3 loading.py')
     else:
-        y = input(color(7,  f' {'OPTION 2':<10}'
+        y = input(color(7,  f' {"OPTION 2":<10}'
                             ' Would you like to use Poetry (y/n)? '))
         if y == 'y':
-            print(f' {'':<10} poetry install')
-            print(f' {'':<10} poetry run python loading.py')
+            print(f' {"":<10} poetry install')
+            print(f' {"":<10} poetry run python loading.py')
         else:
-            print(f' {'':<10} Then enjoy your missing dependencies!')
-            print(f' {'':<10} Good luck working without them :)')
+            print(f' {"":<10} Then enjoy your missing dependencies!')
+            print(f' {"":<10} Good luck working without them :)')
 
 
 # ----------------------------------------------------------------------------
@@ -112,17 +112,12 @@ def check_dependencies() -> bool:
 #  --- requests   Handling HTTP protocols for external data
 # ----------------------------------------------------------------------------
 
-def api_analysis(data_points: int, url: str) -> np.ndarray:
-    """
-    REQUESTS METHOD: External Mainframe Access.
-    Fetches real-time temperature data from Le Havre.
-    'Requests' handles the HTTP handshake, while 'NumPy'
-    is used to structure the resulting data for analysis.
-    """
+def api_analysis(data_points: int, url: str) -> 'np.ndarray':
+    """Fetch API data. Use 'NumPy' to structure data for analysis."""
 
     # --- Later imports to avoid errors when lib are not installed
-    import numpy as np
     import requests
+    import numpy as np
 
     print()
     print(color(3, " Analyzing Matrix data..."))
@@ -148,8 +143,12 @@ def api_analysis(data_points: int, url: str) -> np.ndarray:
         return sample_analysis(data_points)
 
 
-def sample_analysis(data_points: int) -> np.ndarray:
+def sample_analysis(data_points: int) -> 'np.ndarray':
     """Standard NumPy simulation (Default)."""
+    # --- Later imports to avoid errors when lib are not installed
+    import requests
+    import numpy as np
+
     print()
     print(color(3, " Analyzing Matrix data..."))
     print(color(3, f" Processing {data_points} data points..."))
@@ -160,7 +159,7 @@ def sample_analysis(data_points: int) -> np.ndarray:
 #  Visualization Logic
 # ----------------------------------------------------------------------------
 
-def create_visualization(data: np.ndarray) -> None:
+def create_visualization(data: 'np.ndarray') -> None:
     """Use pandas for analysis and matplotlib for output."""
 
     # --- Later imports to avoid errors when lib are not installed
@@ -208,7 +207,7 @@ def loading() -> None:
             # Fetch data from the Mainframe or fallback to Simulation
             data = api_analysis(data_points,
                                 'https://api.open-meteo.com/v1/forecast?'
-                                'latitude=49.4938&longitude=0.1077&hourly'
+                                'latitud=49.4938&longitude=0.1077&hourly'
                                 '=temperature_2m')
 
             # Generate the visual output
