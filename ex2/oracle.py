@@ -3,14 +3,6 @@ Exercise 2: Accessing the Mainframe
 Authorized: os, sys, python-dotenv modules, file operations
 """
 
-# ----------------------------------------------------------------------------
-#  Imports
-# ----------------------------------------------------------------------------
-
-import os
-import sys
-from dotenv import load_dotenv
-
 
 # ----------------------------------------------------------------------------
 #  Visual helpers
@@ -35,6 +27,19 @@ def color(code: int, text: str) -> str:
         color = colors[7]
 
     return f'{color}{text}{colors[0]}'
+
+
+# ----------------------------------------------------------------------------
+#  Imports
+# ----------------------------------------------------------------------------
+
+try:
+    import os
+    import sys
+    from dotenv import load_dotenv
+except (ModuleNotFoundError, ImportError) as e:
+    print(f"\n{color(5, f' ERROR! {e}')}\n")
+    exit()
 
 
 # ----------------------------------------------------------------------------
