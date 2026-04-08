@@ -12,4 +12,4 @@ git clone https://github.com/spacotto/Python_Module08.git
 ## Theoretical Concepts
 
 The theoretical concepts covered in this module are documented in my separate notes repository: 
-- PYTHON 101
+- [PYTHON 101 — PART XII: PYTHON DEVELOPMENT ENVIRONMENT AND TOOLS](https://github.com/spacotto/grimoire/blob/main/python/index_python.md#part-xii-python-development-environment-and-tools)
