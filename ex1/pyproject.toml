@@ -21,7 +21,11 @@ python = "^3.10"
 pandas = "^2.1.0"
 numpy = "^1.25.0"
 matplotlib = "^3.7.2"
-requests = "^2.31.0" 
+requests = "^2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+types-requests = "^2.31.0"
+pandas-stubs = "^2.1.0" 
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

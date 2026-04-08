@@ -10,6 +10,7 @@ Objective: Demonstrate understanding of package management
 # ----------------------------------------------------------------------------
 
 import sys
+from typing import Any
 from importlib import import_module, metadata
 
 
@@ -57,8 +58,9 @@ def instructions() -> None:
     x = input(color(7, f' {"OPTION 1":<10}'
                        ' Would you like to use pip (y/n)? '))
     if x == 'y':
-        print(f' {"":<10} python -m venv matrix_env')
-        print(f' {"":<10} source matrix_env/bin/activate')
+        if sys.prefix == sys.base_prefix:
+            print(f' {"":<10} python -m venv matrix_env')
+            print(f' {"":<10} source matrix_env/bin/activate')
         print(f' {"":<10} pip install -r requirements.txt')
         print(f' {"":<10} python3 loading.py')
     else:
@@ -112,7 +114,7 @@ def check_dependencies() -> bool:
 #  --- requests   Handling HTTP protocols for external data
 # ----------------------------------------------------------------------------
 
-def api_analysis(data_points: int, url: str) -> 'np.ndarray':
+def api_analysis(data_points: int, url: str) -> Any:
     """Fetch API data. Use 'NumPy' to structure data for analysis."""
 
     # --- Later imports to avoid errors when lib are not installed
@@ -143,7 +145,7 @@ def api_analysis(data_points: int, url: str) -> 'np.ndarray':
         return sample_analysis(data_points)
 
 
-def sample_analysis(data_points: int) -> 'np.ndarray':
+def sample_analysis(data_points: int) -> Any:
     """Standard NumPy simulation (Default)."""
     # --- Later imports to avoid errors when lib are not installed
     import numpy as np
@@ -158,7 +160,7 @@ def sample_analysis(data_points: int) -> 'np.ndarray':
 #  Visualization Logic
 # ----------------------------------------------------------------------------
 
-def create_visualization(data: 'np.ndarray') -> None:
+def create_visualization(data: Any) -> None:
     """Use pandas for analysis and matplotlib for output."""
 
     # --- Later imports to avoid errors when lib are not installed
